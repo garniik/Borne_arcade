@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-IA Doc Patch - Génère des patches de documentation sur les PR
-
-Principe : analyse le git diff + docs existantes + style guide
-=> propose des patches pour mettre à jour la documentation
+Script pour générer des patches de documentation assistés par IA.
+Principe: IA propose, jamais n'impose.
 """
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
