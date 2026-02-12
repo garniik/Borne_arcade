@@ -35,18 +35,30 @@ class IADocPatcher:
         with open(self.config_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     
-    def get_git_diff(self, commit_range: str = "HEAD~1..HEAD") -> str:
-        """Récupère le git diff pour la range spécifiée."""
+    def get_git_diff(self, commit_range: Optional[str] = None) -> str:
+        """Récupère le diff git."""
+        if commit_range:
+            cmd = ["git", "diff", "--name-only", commit_range]
+        else:
+            cmd = ["git", "diff", "--name-only", "HEAD~1"]
+        
         try:
             result = subprocess.run(
-                ["git", "diff", "--name-only", commit_range],
-                capture_output=True,
-                text=True,
-                check=True
+                cmd, 
+                capture_output=True, 
+                text=True, 
+                encoding='utf-8',  # Force UTF-8 encoding
+                errors='replace'    # Remplace les caractères invalides
             )
+            
+            if result.returncode != 0:
+                raise Exception(f"Erreur git diff: {result.stderr}")
+            
             return result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Erreur git diff: {e}")
+            
+        except Exception as e:
+            print(f"❌ Erreur: {e}")
+            return ""
     
     def get_full_diff(self, commit_range: str = "HEAD~1..HEAD") -> str:
         """Récupère le diff complet avec le contenu."""
@@ -55,11 +67,14 @@ class IADocPatcher:
                 ["git", "diff", commit_range],
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
+                encoding='utf-8',  # Force UTF-8 encoding
+                errors='replace'  # Remplace les caractères invalides
             )
             return result.stdout
         except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Erreur git diff: {e}")
+            print(f"❌ Erreur git diff: {e}")
+            return ""
     
     def find_related_docs(self, changed_files: List[str]) -> List[Path]:
         """Trouve les fichiers de documentation liés aux changements."""
