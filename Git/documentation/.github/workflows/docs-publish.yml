@@ -1,0 +1,159 @@
+name: Documentation Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'documentation/**'
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    name: Build Documentation
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin pyyaml
+      
+      - name: Configure Git user
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      
+      - name: Generate API docs
+        run: |
+          mkdir -p docs/api
+          # Copier les fichiers de doc existants
+          cp -r documentation/src/* docs/
+      
+      - name: Build with MkDocs
+        run: |
+          mkdocs build --strict
+      
+      - name: Check build
+        run: |
+          if [ ! -d "site" ]; then
+            echo "❌ Build failed - no site directory"
+            exit 1
+          fi
+          echo "✅ Build successful"
+          ls -la site/
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: site/
+          retention-days: 7
+
+  deploy-docs:
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    needs: build-docs
+    if: github.ref == 'refs/heads/main'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-site
+          path: ./site
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  release-notes:
+    runs-on: ubuntu-latest
+    name: Generate Release Notes
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      
+      - name: Extract version from tag
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      
+      - name: Generate release notes
+        run: |
+          python documentation/scripts/ia-release-notes.py \
+            --version $VERSION \
+            --stdout
+      
+      - name: Update CHANGELOG
+        run: |
+          python documentation/scripts/ia-release-notes.py \
+            --version $VERSION \
+            --output CHANGELOG.md
+      
+      - name: Commit CHANGELOG
+        run: |
+          git add CHANGELOG.md
+          if git diff --staged --quiet; then
+            echo "No changes to CHANGELOG.md"
+          else
+            git commit -m "docs: update CHANGELOG for $VERSION"
+            git push
+          fi
+
+  notify:
+    runs-on: ubuntu-latest
+    name: Notify Deployment
+    needs: [deploy-docs]
+    if: always()
+    
+    steps:
+      - name: Deployment status
+        run: |
+          if [ "${{ needs.deploy-docs.result }}" == "success" ]; then
+            echo "✅ Documentation deployed successfully"
+            echo "📖 Available at: ${{ steps.deployment.outputs.page_url }}"
+          else
+            echo "❌ Documentation deployment failed"
+            exit 1
+          fi

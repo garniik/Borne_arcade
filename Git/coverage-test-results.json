@@ -1,0 +1,98 @@
+{
+  "python_docstrings": {
+    "total_functions": 0,
+    "documented_functions": 0,
+    "total_classes": 0,
+    "documented_classes": 0,
+    "undocumented": []
+  },
+  "markdown_structure": {
+    "total_files": 9,
+    "files_with_issues": 5,
+    "issues": [
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\main-interface.md",
+        "issues": [
+          {
+            "type": "missing_section",
+            "message": "Section manquante: Vue d'ensemble"
+          },
+          {
+            "type": "missing_section",
+            "message": "Section manquante: Exemples"
+          },
+          {
+            "type": "broken_internal_link",
+            "message": "Lien interne cassé: gui-components.md -> D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\gui-components.md"
+          }
+        ]
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\ollama-wrapper.md",
+        "issues": [
+          {
+            "type": "broken_internal_link",
+            "message": "Lien interne cassé: ../ollama_wrapper_iut.py -> D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\..\\ollama_wrapper_iut.py"
+          }
+        ]
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\games\\pong.md",
+        "issues": [
+          {
+            "type": "broken_internal_link",
+            "message": "Lien interne cassé: index.md -> D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\games\\index.md"
+          }
+        ]
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\guides\\docs-as-code.md",
+        "issues": [
+          {
+            "type": "broken_internal_link",
+            "message": "Lien interne cassé: ../.docs/config.yml -> D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\guides\\..\\.docs\\config.yml"
+          }
+        ]
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\how-to\\create-deploy-game.md",
+        "issues": [
+          {
+            "type": "missing_section",
+            "message": "Section manquante: Prérequis"
+          }
+        ]
+      }
+    ]
+  },
+  "examples": {
+    "total_examples_referenced": 21,
+    "existing_examples": 18,
+    "missing_examples": [
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\ollama-wrapper.md",
+        "example": "OllamaError                 # Erreur générique\n├── OllamaConnectionError   # Problèmes de connexion\n...",
+        "issue": "syntax_error"
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\api\\ollama-wrapper.md",
+        "example": "OllamaWrapper(\n    base_url: str = \"http://10.22.28.190:11434\",\n    timeout_s: float = 120.0\n) -> No...",
+        "issue": "syntax_error"
+      },
+      {
+        "file": "D:\\sauvegarde\\BUT3\\borne_arcade\\Borne_arcade\\Git\\documentation\\src\\guides\\docs-as-code.md",
+        "example": "# Checks\n- Fonctions publiques sans docstring\n- Endpoints non documentés\n- Exemples manquants\n- Lien...",
+        "issue": "syntax_error"
+      }
+    ]
+  },
+  "summary": {
+    "python_function_coverage": 1.0,
+    "python_class_coverage": 1.0,
+    "markdown_issues": 5,
+    "examples_coverage": 0.8571428571428571,
+    "total_undocumented": 0,
+    "total_failures": 0
+  },
+  "failures": []
+}

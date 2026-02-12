@@ -1,0 +1,34 @@
+# Builds et temporaires
+build/
+dist/
+_site/
+.cache/
+.tmp/
+
+# Logs
+*.log
+logs/
+
+# IA cache et modèles locaux
+.ia_cache/
+models/
+
+# Environnement virtuel
+venv/
+.env/
+.envrc
+
+# Outils de doc
+.mkdocs/
+.pytest_cache/
+.coverage
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
