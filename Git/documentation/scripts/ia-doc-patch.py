@@ -12,6 +12,14 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
+# Import du wrapper Ollama
+try:
+    sys.path.append(str(Path(__file__).parent.parent))
+    from ollama_wrapper_iut import OllamaWrapper
+except ImportError:
+    print("⚠️  Wrapper Ollama non trouvé, utilisation du mode simulation")
+    OllamaWrapper = None
+
 try:
     import yaml
 except ImportError:
@@ -25,6 +33,17 @@ class IADocPatcher:
     def __init__(self, config_path: Optional[Path] = None):
         self.config_path = config_path or Path("documentation/.docs/config.yml")
         self.config = self._load_config()
+        
+        # Initialisation du wrapper Ollama
+        self.ollama = None
+        if OllamaWrapper:
+            try:
+                self.ollama = OllamaWrapper()
+                print("🤖 Ollama connecté - Mode IA activé")
+            except Exception as e:
+                print(f"⚠️  Erreur Ollama: {e} - Mode simulation")
+        else:
+            print("⚠️  Ollama non disponible - Mode simulation")
         
     def _load_config(self) -> Dict:
         """Charge la configuration depuis config.yml."""
@@ -214,7 +233,76 @@ class IADocPatcher:
         return patches
     
     def _generate_doc_updates(self, content: str, analysis: Dict) -> str:
-        """Génère les mises à jour de documentation (simulation IA) pour la borne arcade."""
+        """Génère les mises à jour de documentation avec IA Ollama."""
+        
+        if self.ollama:
+            # Mode IA réelle avec Ollama
+            return self._generate_with_ollama(content, analysis)
+        else:
+            # Mode simulation (fallback)
+            return self._generate_simulation(content, analysis)
+    
+    def _generate_with_ollama(self, content: str, analysis: Dict) -> str:
+        """Génère la documentation avec l'IA Ollama."""
+        
+        # Construire le prompt pour l'IA
+        prompt = self._build_ollama_prompt(content, analysis)
+        
+        try:
+            # Appel à Ollama
+            response = self.ollama.generate(
+                prompt=prompt,
+                model=self.config.get("ai", {}).get("model", "llama3.2"),
+                options={
+                    "temperature": 0.3,  # Créativité modérée
+                    "max_tokens": 2000
+                }
+            )
+            
+            return response
+            
+        except Exception as e:
+            print(f"⚠️  Erreur Ollama: {e}")
+            print("🔄 Utilisation du mode simulation")
+            return self._generate_simulation(content, analysis)
+    
+    def _build_ollama_prompt(self, content: str, analysis: Dict) -> str:
+        """Construit le prompt pour Ollama."""
+        
+        prompt = f"""Tu es un expert en documentation technique pour une borne arcade Java.
+
+CONTEXTE:
+- Projet: Borne arcade avec jeux en Java
+- Bibliothèque: MG2D pour les graphiques
+- Architecture: Classes Java dans borne_arcade/, jeux dans projet/
+
+ANALYSE DES CHANGEMENTS:
+{json.dumps(analysis, indent=2, ensure_ascii=False)}
+
+DOCUMENTATION EXISTANTE:
+{content[:1000]}...
+
+TÂCHE:
+Génère des mises à jour de documentation pertinentes en Markdown français.
+Focus sur:
+1. Classes Java nouvelles ou modifiées
+2. Méthodes publiques importantes  
+3. Nouveaux jeux ajoutés
+4. Scripts shell d'administration
+
+RÈGLES:
+- Utilise le format Markdown
+- Sois concis et informatif
+- Ajoute des exemples si pertinent
+- Respecte le style "Docs-as-Code"
+- Génère du contenu exploitable directement
+
+RÉPONSE (Markdown uniquement):"""
+        
+        return prompt
+    
+    def _generate_simulation(self, content: str, analysis: Dict) -> str:
+        """Mode simulation si Ollama n'est pas disponible."""
         updated_content = content
         
         # Ajouter nouvelles classes Java
