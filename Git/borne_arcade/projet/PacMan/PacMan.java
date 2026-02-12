@@ -6,6 +6,7 @@ public class PacMan {
     private int score = 0;
     private int vies = 3;
     private boolean jeuEnCours = true;
+    private int niveau = 1;
     
     /**
      * Constructeur du jeu Pac-Man.
@@ -56,6 +57,23 @@ public class PacMan {
     private void mettreAJourScore(int points) {
         score += points;
         // Affichage du score
+    }
+    
+    /**
+     * Vérifie si le niveau est complété.
+     * @return true si toutes les pac-gommes sont mangées
+     */
+    public boolean niveauComplet() {
+        return false; // TODO: implémenter la vérification
+    }
+    
+    /**
+     * Passe au niveau suivant avec difficulté accrue.
+     */
+    public void niveauSuivant() {
+        niveau++;
+        // Augmenter la vitesse des fantômes
+        // Réinitialiser le plateau
     }
     
     /**
