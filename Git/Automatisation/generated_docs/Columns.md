@@ -2,199 +2,234 @@
 
 ## Décris le jeu Columns (objectif, principe, gameplay) en te basant sur le code.
 
-### Description du Jeu Columns
+### Documentation du Jeu Columns
 
-#### Objectif
-Aligner trois gemmes de même couleur pour les faire disparaître.
+---
 
-#### Principe
-Le jeu Columns est un jeu de puzzle où le joueur doit aligner trois gemmes de même couleur pour les faire disparaître. Le jeu se déroule sur une grille de colonnes, où chaque colonne contient des gemmes de différentes couleurs.
+#### **1. Objectif du jeu**  
+Le jeu **Columns** est un puzzle où l'objectif est d'aligner **trois gemmes de la même couleur** pour les faire disparaître. Les joueurs doivent éliminer les gemmes en créant des combinaisons de trois ou plus, tout en gérant un **temps limité** (indiqué par le message "SACLIGNOTT!!!"). L'accumulation de gemmes non éliminées entraîne une perte de vie.
 
-#### Gameplay
-1. **Interface de Jeu**:
-   - **Fenêtre**: La fenêtre principale du jeu est une fenêtre pleine écran avec un affichage de primitives et de FPS (frames par seconde) activé.
-   - **Clavier**: Le clavier est utilisé pour contrôler le jeu. Les directions de déplacement (haut, bas, gauche, droite) et les boutons de jeu (A, B, C, X, Y, Z) sont gérés via le clavier.
-   - **Menu**: Le menu principal du jeu permet de choisir entre plusieurs options, notamment le mode de jeu (1 joueur, 2 joueurs) et la fin du jeu (quitter).
+---
 
-2. **Gestion des Gemmes**:
-   - **Colone**: Chaque colonne est représentée par une instance de la classe `Colone`, qui contient trois gemmes (`Gemme`).
-   - **Gemme**: Les gemmes sont de différentes couleurs (jaune, orange, vert, violet, rouge, bleu) et peuvent être vides. Elles sont représentées par des textures chargées à partir de fichiers d'images.
+#### **2. Principe du jeu**  
+- **Grille de gemmes** : La partie se déroule sur une grille de gemmes (probablement 8 colonnes x 10 lignes).  
+- **Mouvement des gemmes** : Les joueurs peuvent déplacer des gemmes en les **échangeant** avec celles adjacentes (via des touches de direction ou des boutons).  
+- **Élimination** : Lorsque trois ou plus de gemmes identiques sont alignées horizontalement ou verticalement, elles disparaissent, et des nouvelles gemmes tombent pour remplir les espaces.  
+- **Temps** : Le jeu comporte un **chronomètre** (non explicitement codé, mais suggéré par le message "SACLIGNOTT!!!").  
 
-3. **Interactions**:
-   - **Intervertir**: Les gemmes peuvent être interverties pour aligner des séquences de trois gemmes de même couleur.
-   - **Déplacement**: Les gemmes peuvent être déplacées verticalement dans les colonnes pour aligner des séquences de trois gemmes de même couleur.
+---
 
-4. **Gestion des États**:
-   - **Menu**: Le menu permet de naviguer entre les différentes options du jeu.
-   - **Partie**: La partie principale du jeu gère le gameplay et la gestion des scores.
+#### **3. Gameplay**  
+- **Contrôles** :  
+  - **Joystick J1** : Déplacement des gemmes (HAUT, BAS, GAUCHE, DROITE).  
+  - **Boutons J1** :  
+    - **ACTION** : Échanger des gemmes.  
+    - **QUITTER** : Quitter la partie.  
+  - **Joystick J2** : Non implémenté (partie du code tronquée).  
+- **Logique de jeu** :  
+  - La classe `Colone` gère la logique des colonnes de gemmes, avec une méthode `intervertir()` pour échanger des gemmes.  
+  - La classe `Gemme` définit les couleurs des gemmes (JAUNE, ORANGE, VERT, VIOLET, ROUGE, BLEU) et charge leurs textures depuis des fichiers images (`img/game/gems/...`).  
+  - La classe `Partie` (non entièrement visible) gère la logique de détection des combinaisons, la gestion du temps, et la mise à jour de l'affichage.  
 
-5. **Contrôle**:
-   - **ClavierBorneArcade**: Cette classe gère les interactions clavier pour contrôler le jeu, notamment les directions de déplacement et les boutons de jeu.
+---
 
-#### Conclusion
-Columns est un jeu de puzzle où le joueur doit aligner trois gemmes de même couleur pour les faire disparaître. Le jeu est contrôlé via le clavier, avec des options de menu pour choisir le mode de jeu et la fin du jeu. Les gemmes sont représentées par des textures et peuvent être interverties pour aligner des séquences de trois gemmes de même couleur.
+#### **4. Structure Technique**  
+- **Fenêtre** :  
+  - Utilise `FenetrePleinEcran` pour un affichage en plein écran (1280x1024).  
+  - Affichage des primitives et textures activé.  
+- **Menu** :  
+  - Gère l'entrée du jeu avec des options : "1 Joueur", "2 Joueurs", "Quitter".  
+  - Utilise des textures (`bg`, `title`) et des rectangles pour l'interface.  
+- **Gestion des inputs** :  
+  - `ClavierBorneArcade` mappe les touches du clavier aux actions (directions et boutons).  
+  - Constantes définies dans `Controles.java` (ex. `HAUT`, `ACTION`, `QUITTER`).  
+
+---
+
+#### **5. Fichiers Clés**  
+- **Main.java** : Point d'entrée, initialise la fenêtre et les gestionnaires d'événements.  
+- **Menu.java** : Gère l'affichage et les options du menu.  
+- **Gemme.java** : Définit les couleurs et textures des gemmes.  
+- **Colone.java** : Gère la logique des colonnes et des échanges de gemmes.  
+- **ClavierBorneArcade.java** : Mappe les touches du clavier aux actions du jeu.  
+
+---
+
+#### **6. Points à Développer**  
+- **Gestion du temps** : Implémenter un chronomètre et un système de pénalités.  
+- **Niveaux de difficulté** : Ajouter des paramètres de difficulté (vitesse de chute des gemmes).  
+- **Multijoueur** : Finaliser la logique pour deux joueurs (via `Partie` et `ClavierBorneArcade`).  
+- **Effets sonores** : Ajouter des sons pour les éliminations et les collisions.  
+
+--- 
+
+Cette documentation s'appuie sur les fichiers fournis et les constantes/structures de code pour décrire le jeu de manière technique et structurée.
 
 ## Quels sont les contrôles du jeu Columns sur la borne arcade (touches/boutons) ?
 
-### Contrôles du jeu Columns sur la borne arcade
+**Documentation des Contrôles du Jeu Columns sur la Borne Arcade**
 
-#### ClavierBorneArcade.java
-La classe `ClavierBorneArcade` gère les contrôles du clavier pour la borne d'arcade. Voici les contrôles disponibles :
+---
 
-- **Joysticks** :
-  - `joyJ1Haut` : Joystick 1 vers le haut
-  - `joyJ1Bas` : Joystick 1 vers le bas
-  - `joyJ1Gauche` : Joystick 1 vers la gauche
-  - `joyJ1Droite` : Joystick 1 vers la droite
-  - `joyJ2Haut` : Joystick 2 vers le haut
-  - `joyJ2Bas` : Joystick 2 vers le bas
-  - `joyJ2Gauche` : Joystick 2 vers la gauche
-  - `joyJ2Droite` : Joystick 2 vers la droite
+### **Contrôles du Jeu**
+Les contrôles du jeu **Columns** sur la borne arcade sont définis via des constantes et une configuration spécifique. Voici les touches/boutons associés aux actions principales :
 
-- **Boutons** :
-  - `boutonJ1A` : Bouton A du joystick 1
-  - `boutonJ1B` : Bouton B du joystick 1
-  - `boutonJ1C` : Bouton C du joystick 1
-  - `boutonJ1X` : Bouton X du joystick 1
-  - `boutonJ1Y` : Bouton Y du joystick 1
-  - `boutonJ1Z` : Bouton Z du joystick 1
-  - `boutonJ2A` : Bouton A du joystick 2
-  - `boutonJ2B` : Bouton B du joystick 2
-  - `boutonJ2C` : Bouton C du joystick 2
-  - `boutonJ2X` : Bouton X du joystick 2
-  - `boutonJ2Y` : Bouton Y du joystick 2
-  - `boutonJ2Z` : Bouton Z du joystick 2
+#### **1. Joystick (Joueur 1)**
+- **Direction** :
+  - **Haut** : `Controles.HAUT` (déplacement de la barre vers le haut)
+  - **Bas** : `Controles.BAS` (déplacement de la barre vers le bas)
+  - **Gauche** : `Controles.GAUCHE` (déplacement de la barre vers la gauche)
+  - **Droite** : `Controles.DROITE` (déplacement de la barre vers la droite)
 
-#### Description.txt
-La description du jeu mentionne que les contrôles sont associés à des touches et des boutons, mais elle ne fournit pas de détails spécifiques sur les touches du clavier. Les contrôles sont plutôt associés aux joysticks et aux boutons du clavier pour la borne d'arcade.
+#### **2. Boutons (Joueur 1)**
+- **Quitter** : `Controles.QUITTER` (action de quitter le jeu)
+- **Intervertir** : Action associée à `Controles.ACTION` (échange des gemmes en haut/bas)
 
-#### Conclusion
-Les contrôles du jeu Columns sur la borne arcade sont principalement gérés par les joysticks et les boutons du clavier. Les joysticks permettent de déplacer les colonnes vers le haut, le bas, la gauche et la droite, tandis que les boutons permettent d'interagir avec les gemmes et d'effectuer des actions spécifiques.
+#### **3. Configuration des Boutons**
+Le fichier `bouton.txt` définit les associations :
+```
+Déplacement barre:rien:rien:Quitter:Intervertir:rien:rien
+```
+- **"Quitter"** : Bouton de sortie (probablement associé à `Controles.QUITTER`)
+- **"Intervertir"** : Bouton pour échanger les gemmes (associé à `Controles.ACTION`)
+
+---
+
+### **Notes Techniques**
+- Les **joysticks** (`joyJ1`, `joyJ2`) gèrent les déplacements de la barre.
+- Les **boutons** (`boutonJ1A`, `boutonJ1B`, etc.) sont utilisés pour des actions spécifiques (quitter, intervertir).
+- Les constantes `Controles` (ex: `HAUT`, `BAS`, `ACTION`, `QUITTER`) définissent les codes associés aux touches/boutons dans le code source.
+
+---
+
+### **Résumé**
+| Action               | Contrôle                  | Code Constante       |
+|----------------------|---------------------------|----------------------|
+| Déplacement barre    | Joystick (Haut/Bas/Gauche/Droite) | `Controles.HAUT`, `BAS`, `GAUCHE`, `DROITE` |
+| Quitter le jeu      | Bouton spécifique         | `Controles.QUITTER`  |
+| Intervertir gemmes   | Bouton spécifique         | `Controles.ACTION`   |
+
+Ces contrôles sont implémentés via la classe `ClavierBorneArcade` et les constantes de `Controles`.
 
 ## Comment lancer et quitter le jeu Columns (scripts, classe main, commande) ?
 
-Pour lancer et quitter le jeu Columns, voici les étapes à suivre basées sur les fichiers fournis :
+### Documentation : Lancement et Quitte du Jeu Columns
 
-### Lancer le jeu Columns
+---
 
-1. **Exécuter le fichier `Main.java`** :
-   - Ouvrez un terminal ou une console de commande.
-   - Naviguez jusqu au répertoire contenant le fichier `Main.java`.
-   - Exécutez le fichier avec le compilateur Java (javac) puis avec le programme d'exécution (java).
-   ```sh
-   javac Main.java
-   java Main
-   ```
+#### **1. Lancement du Jeu**
+- **Script principal** :  
+  Exécutez la classe `Main` via le JDK :  
+  ```bash
+  java Main
+  ```
+  - Le programme initialise une fenêtre en plein écran (`FenetrePleinEcran`) avec le titre "Columns".
+  - Un gestionnaire de clavier (`ClavierBorneArcade`) est associé à la fenêtre pour gérer les entrées du joueur.
 
-2. **Exécuter le programme** :
-   - Une fenêtre de jeu apparaîtra avec le titre "Columns".
-   - Vous pouvez commencer à jouer en utilisant les contrôles du clavier définis dans `ClavierBorneArcade.java`.
+---
 
-### Quitter le jeu Columns
+#### **2. Quitte du Jeu**
+- **Méthodes de sortie** :  
+  Le jeu peut être quitté via deux mécanismes :
+  1. **Clavier** :  
+     - Appuyez sur le bouton **"Quitter"** associé au joueur (mappé à `Controles.QUITTER`).  
+     - Ce bouton est configuré dans le fichier `bouton.txt` (ligne : `Quitter:Intervertir`).  
+     - Lors de la détection de cette entrée, le programme met fin à la boucle de jeu et ferme la fenêtre.
 
-1. **Utiliser les contrôles du clavier** :
-   - Pour quitter le jeu, utilisez les touches de quitture définies dans `ClavierBorneArcade.java`. Par exemple, la touche "Q" ou "Escape" peut être utilisée pour quitter le jeu.
+  2. **Menu principal** :  
+     - Sélectionnez l'option **"Quitter"** (`Menu.BOUTONEXIT`) dans le menu principal.  
+     - Cela active la logique de fermeture via la variable `fermetureJeu` dans la classe `Main`.
 
-2. **Fermer la fenêtre** :
-   - Si vous utilisez une fenêtre pleine écran (`FenetrePleinEcran`), vous pouvez fermer la fenêtre en cliquant sur le bouton "X" dans le coin supérieur droit de la fenêtre.
+- **Fermeture de la fenêtre** :  
+  La fenêtre (`FenetrePleinEcran`) est fermée via la méthode `setVisible(false)` ou `dispose()` lors de la détection de l'option de sortie.
 
-### Documentation
+---
 
-#### Classe `Main.java`
-- **Fonction principale** : La classe `Main` est la classe principale du programme.
-- **Méthode `main`** : Cette méthode est appelée lorsque le programme est exécuté.
-- **Initialisation** : 
-  - Crée une fenêtre avec le titre "Columns".
-  - Ajoute un clavier pour contrôler le jeu.
-  - Crée un menu et une partie du jeu.
-  - Gère les événements clavier pour contrôler le jeu.
+#### **3. Commandes Clavier**
+- **Bouton "Quitter"** :  
+  - Mappé à `Controles.QUITTER` (valeur `2`).  
+  - Correspond à une touche spécifique sur la borne d'arcade (à définir dans `ClavierBorneArcade`).
 
-#### Classe `Menu.java`
-- **Menu principal** : Cette classe gère le menu principal du jeu.
-- **Attributs** : Contient les attributs nécessaires pour afficher le menu et gérer les interactions avec l'utilisateur.
-- **Méthodes** : 
-  - `afficherMenu()` : Affiche le menu principal.
-  - `traiterChoix(int choix)` : Traite le choix de l'utilisateur et retourne le statut du menu.
+- **Autres commandes** :  
+  - Les mouvements et actions sont gérés via `Controles.HAUT`, `Controles.BAS`, etc. (détaillés dans `Controles.java`).
 
-#### Classe `ClavierBorneArcade.java`
-- **Classe de gestion du clavier** : Cette classe gère les événements clavier spécifiques à la borne d'arcade.
-- **Méthodes** : 
-  - `keyTyped(KeyEvent e)` : Gère les touches de type.
-  - `keyPressed(KeyEvent e)` : Gère les touches enfoncées.
-  - `keyReleased(KeyEvent e)` : Gère les touches relâchées.
+---
 
-#### Classe `Colone.java`
-- **Classe pour gérer les colonnes de gemmes** : Cette classe gère les colonnes de gemmes dans le jeu.
-- **Méthodes** : 
-  - `intervertir()` : Permet d'intervertir les positions des gemmes dans une colonne.
-  - `getX()` : Retourne la position x de la colonne.
-  - `getY()` : Retourne la position y de la colonne.
+#### **4. Structure du Code**
+- **Main.java** :  
+  - Contient la boucle principale et la logique de gestion des menus/parties.  
+  - Utilise `FenetrePleinEcran` pour la fenêtre et `ClavierBorneArcade` pour les entrées.
 
-#### Classe `Gemme.java`
-- **Classe pour gérer les gemmes** : Cette classe gère les différents types de gemmes et leurs propriétés.
-- **Méthodes** : 
-  - `intervertir()` : Permet d'intervertir les positions des gemmes dans une colonne.
-  - `getX()` : Retourne la position x de la colonne.
-  - `getY()` : Retourne la position y de la colonne.
+- **Menu.java** :  
+  - Gère l'affichage et les transitions entre les états du menu (statut `STATUTMENU`, `BOUTONEXIT`, etc.).
 
-### Conclusion
-Pour lancer et quitter le jeu Columns, suivez les étapes ci-dessus. Le programme est exécuté en exécutant le fichier `Main.java` avec le compilateur et le programme d'exécution Java. Pour quitter le jeu, utilisez les contrôles du clavier spécifiques à la borne d'arcade.
+- **ClavierBorneArcade.java** :  
+  - Implémente les écouteurs de clavier pour les boutons et joysticks de la borne.
+
+---
+
+#### **5. Notes Techniques**
+- **Fermeture propre** :  
+  Le jeu ferme la fenêtre et libère les ressources via `FenetrePleinEcran` et `ClavierBorneArcade`.
+- **Compatibilité** :  
+  Le code est conçu pour fonctionner sur une borne d'arcade avec un clavier personnalisé (via `ClavierBorneArcade`).
 
 ## Quelles sont les classes principales et leurs responsabilités dans Columns ?
 
-### Classes Principales et Responsabilités dans Columns
+### Documentation Technique : Projet Columns
 
-#### 1. **Main.java**
-- **Responsabilités :**
-  - Initialisation de la fenêtre de jeu.
-  - Création et configuration de la fenêtre pleine écran.
-  - Ajout d'un clavier pour la gestion des contrôles.
-  - Création et gestion des objets de jeu (Menu et Partie).
-  - Gestion de l'affichage des primitives et des FPS.
-  - Gestion de l'interactivité avec le clavier.
+#### **Classes Principales et Responsabilités**
 
-#### 2. **Menu.java**
-- **Responsabilités :**
-  - Gestion du menu principal du jeu.
-  - Affichage du fond et du titre du jeu.
-  - Gestion des choix du joueur (Menu principal, Choix de la musique/difficulté, Quitter).
-  - Gestion des interactions avec le joueur pour choisir les options du menu.
+1. **`Main`**  
+   - **Responsabilité** : Point d'entrée du jeu.  
+   - **Fonctions** :  
+     - Initialise la fenêtre en plein écran (`FenetrePleinEcran`).  
+     - Configure le gestionnaire de clavier (`ClavierBorneArcade`).  
+     - Gère l'état du jeu (menu principal, partie en cours).  
+     - Crée les instances de `Menu` et `Partie` pour démarrer le jeu.  
 
-#### 3. **Colone.java**
-- **Responsabilités :**
-  - Gestion des colonnes de gemmes.
-  - Création et gestion des gemmes dans une colonne.
-  - Gestion de l'intervertissement des gemmes.
-  - Calcul des coordonnées des gemmes.
+2. **`Menu`**  
+   - **Responsabilité** : Gestion de l'interface de menu.  
+   - **Fonctions** :  
+     - Affiche les options de démarrage (1 joueur, 2 joueurs, quitter).  
+     - Gère les interactions utilisateur via les boutons du clavier.  
+     - Définit les états du menu (`STATUTMENU`, `BOUTON1JOUEUR`, etc.).  
+     - Intègre un fond d'écran et des éléments graphiques (textes, boutons).  
 
-#### 4. **Gemme.java**
-- **Responsabilités :**
-  - Gestion des types de gemmes (jaune, orange, vert, violet, rouge, bleu, vide).
-  - Création et gestion des textures des gemmes.
-  - Gestion des actions spécifiques aux gemmes (suppression, etc.).
+3. **`ClavierBorneArcade`**  
+   - **Responsabilité** : Gestion des entrées clavier pour la borne d'arcade.  
+   - **Fonctions** :  
+     - Mappe les touches du clavier aux actions du jeu (directions, boutons).  
+     - Transmet les événements clavier à l'application via `KeyListener`.  
+     - Supporte jusqu'à 6 boutons par joueur (A/B/C/X/Y/Z).  
 
-#### 5. **Controles.java**
-- **Responsabilités :**
-  - Définition des constantes pour les directions et les boutons de contrôle.
-  - Utilisation pour la gestion des mouvements et des actions dans le jeu.
+4. **`Colone`**  
+   - **Responsabilité** : Gestion des colonnes de gemmes.  
+   - **Fonctions** :  
+     - Stocke et gère trois gemmes par colonne.  
+     - Implémente la logique d'échange des gemmes (méthode `intervertir()`).  
+     - Fournit des accesseurs pour les positions et états des gemmes.  
 
-#### 6. **ClavierBorneArcade.java**
-- **Responsabilités :**
-  - Gestion des événements clavier pour la borne d'arcade.
-  - Interprétation des touches pour les joysticks et les boutons.
-  - Gestion des mouvements et des actions du joueur.
+5. **`Controles`**  
+   - **Responsabilité** : Définition des codes constants pour les actions du jeu.  
+   - **Fonctions** :  
+     - Définit les codes pour les directions (HAUT, BAS, etc.) et les boutons (ACTION, QUITTER).  
+     - Centralise les valeurs numériques pour faciliter la gestion des entrées.  
 
-#### 7. **bouton.txt**
-- **Responsabilités :**
-  - Définition des actions associées aux boutons de la borne d'arcade.
-  - Interprétation des actions pour les joysticks et les boutons.
+6. **`Gemme`**  
+   - **Responsabilité** : Représentation des gemmes du jeu.  
+   - **Fonctions** :  
+     - Définit les couleurs des gemmes (JAUNE, ORANGE, etc.) et leur apparence (textures).  
+     - Gère les états spéciaux (VIDE, NBFRAMESUPPR).  
+     - Fournit des textures préchargées pour le rendu graphique.  
 
-#### 8. **description.txt**
-- **Responsabilités :**
-  - Documentation du jeu.
-  - Description des règles du jeu (aligner trois gemmes de même couleur pour les faire disparaître).
-  - Auteur et année de création du jeu (Dorian Terlat, 2020).
+---
 
-### Conclusion
-Les classes principales dans le projet Columns sont **Main.java**, **Menu.java**, **Colone.java**, **Gemme.java**, **Controles.java**, **ClavierBorneArcade.java**, **bouton.txt**, et **description.txt**. Chaque classe a des responsabilités spécifiques liées à la gestion des objets de jeu, des interactions utilisateur, et à la logique du jeu.
+#### **Structure du Projet**
+- **Fenêtre** : Gérée par `FenetrePleinEcran` pour le rendu en plein écran.  
+- **Gestion des entrées** : Centralisée via `ClavierBorneArcade` et `Controles`.  
+- **Logique de jeu** : Gérée par `Partie` (non complet dans les fichiers fournis).  
+- **Graphismes** : Utilisation de `Texture` et `Point` pour le rendu des gemmes.  
+
+Cette documentation reflète les rôles clés des classes principales et leur interaction dans le cadre du jeu Columns.
 

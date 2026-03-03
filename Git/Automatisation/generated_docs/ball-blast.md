@@ -2,242 +2,178 @@
 
 ## Décris le jeu ball-blast (objectif, principe, gameplay) en te basant sur le code.
 
-### Ball Blast : Description du Jeu
+# Documentation du jeu Ball Blast
 
-#### Objectif
-Ball Blast est un jeu d'arcade où le joueur doit détruire des boules en utilisant des projectiles et des pouvoirs spéciaux. Le but est de détruire toutes les boules sur l'écran pour obtenir le meilleur score possible.
+## 1. Objectif du jeu
+Détruire des boules ennemies en utilisant des balles de tir, tout en accumulant le meilleur score possible. Le jeu comporte des niveaux progressifs avec des mécaniques de gestion de ressources et de précision.
 
-#### Principe
-Le jeu se déroule sur une grille de jeu avec des boules de différentes tailles et couleurs. Le joueur contrôle un personnage qui peut se déplacer à gauche et à droite. Il peut également tirer des projectiles pour détruire les boules. Les boules peuvent avoir des effets spéciaux qui peuvent aider ou gêner le joueur.
+## 2. Principe de jeu
+- **Contrôle des joueurs** :  
+  - Joueur 1 : Joystick (flèches directionnelles) + touches (R, T, Y, F, G, H) pour déplacement et tir  
+  - Joueur 2 : Joystick (touches O, L, K, M) + touches (A, Z, E, Q, S, D) pour déplacement et tir  
+- **Mécanique de tir** :  
+  - Les joueurs tirent des balles pour détruire des boules ennemies.  
+  - Chaque type de balle a une valeur de score différente (ex: boule rouge = 40 points, boule verte = 33 points).  
+  - Un système de cooldown (shootCD) limite les tirs successifs.  
+- **Niveaux** :  
+  - Le niveau détermine le nombre de boules à créer (BALL_EQUIVALENT).  
+  - Des variantes de boules (couleurs) apparaissent selon le niveau.  
 
-#### Gameplay
-1. **Interface de Jeu**:
-   - **Joystick J1**: Utilisé pour déplacer le personnage.
-   - **Joystick J2**: Utilisé pour tirer des projectiles.
-   - **Touches J1**: `r`, `t`, `y` pour déplacer le personnage.
-   - **Touches J2**: `a`, `z`, `e` pour déplacer le personnage.
-   - **Touches J2**: `q`, `s`, `d` pour tirer des projectiles.
+## 3. Gameplay technique
+- **Structure du code** :  
+  - Utilisation de Pygame (version 2.6.1) pour la gestion graphique, audio et input.  
+  - Classes principales :  
+    - `Game` : Gère la logique de jeu (création de balles, gestion des collisions, score).  
+    - `Player` : Contrôle les mouvements et tirs des joueurs.  
+    - `Ball` et `Bullet` : Gèrent les comportements physiques des entités.  
+- **Assets** :  
+  - Arrière-plan chargé depuis `assets/bg_pxl.jpg`.  
+  - Sons (non activés dans le code) pour les effets sonores (bip, explosion, victoire).  
+- **Gestion des états** :  
+  - États principaux : menu, jeu en cours, pause, fin de partie.  
+  - Possibilité de naviguer dans le menu via les touches (non complet dans le code).  
 
-2. **Éléments de Jeu**:
-   - **Boules**: De différentes tailles et couleurs, certaines peuvent avoir des effets spéciaux.
-   - **Projetsiles**: Tirés par le joueur pour détruire les boules.
-   - **Pouvoirs Spéciaux**: Peut être activé par le joueur pour obtenir des avantages temporaires.
+## 4. Interface et menus
+- **Menu principal** :  
+  - Options : Nouvelle partie / Crédits (partiellement implémenté).  
+  - Affichage d'une texture de fond (bg_pxl.jpg).  
+- **Pause** :  
+  - Permet de suspendre le jeu et accéder à des options supplémentaires.  
 
-3. **États du Jeu**:
-   - **Menu**: Affiche les options de jeu (nouvelle partie, pause, crédits).
-   - **Jeux**: Le joueur contrôle le personnage et détruit les boules.
-   - **Pause**: Permet de mettre en pause le jeu.
-   - **Fin de Partie**: Affiche le score et permet de reprendre la partie ou de quitter.
+## 5. Dépendances
+- **Python** : Version 3.7 (via `requirements.txt`).  
+- **Bibliothèque** : Pygame 2.6.1 pour la gestion graphique et audio.  
 
-4. **Gestion des États**:
-   - **State Machine**: Le jeu utilise une machine à états pour gérer les différents états (menu, jeu, pause, fin de partie).
+## 6. Notes techniques
+- Le code est structuré en modules distincts (`game.py`, `menu.py`, `player.py`, etc.).  
+- Le système de score utilise des équivalents de boules (BALL_EQUIVALENT) et des poids (BallEquivalents).  
+- Le jeu intègre une gestion de fenêtre centrée via `SDL_VIDEO_CENTERED`.  
 
-5. **Sons et Musique**:
-   - Le jeu utilise des sons pour les actions de jeu (tir, explosion, victoire) et des musiques de fond.
-
-### Conclusion
-Ball Blast est un jeu d'arcade qui combine des éléments de déplacement, de tir et de destruction. Le joueur doit être rapide et précis pour détruire les boules et obtenir le meilleur score possible. Le jeu est structuré autour d'un menu principal, d'un état de jeu, et d'états spécifiques pour la pause et la fin de partie.
+Ce projet montre une architecture modulaire avec des mécaniques de base de jeu (tir, collision, score) et une interface simple pour le menu.
 
 ## Quels sont les contrôles du jeu ball-blast sur la borne arcade (touches/boutons) ?
 
-### Contrôles du jeu Ball Blast sur borne d'arcade
+### Documentation des Contrôles du Jeu Ball Blast
 
-#### Joystick J1
-- **Haut** : Interagir
-- **Bas** : Interagir
-- **Gauche** : Interagir
-- **Droite** : Interagir
+#### **Contrôles des Joysticks**
+- **Joystick J1**  
+  - Fleches : Haut, Bas, Gauche, Droite  
 
-#### Joystick J2
-- **O** : Interagir
-- **L** : Interagir
-- **K** : Interagir
-- **M** : Interagir
+- **Joystick J2**  
+  - Boutons : **O**, **L**, **K**, **M**  
 
-#### Touches J1
-- **R** : Interagir
-- **T** : Interagir
-- **Y** : Interagir
+#### **Touches de Feu (Buttons)**
+- **J1**  
+  - Touches : **R**, **T**, **Y**, **F**, **G**, **H**  
 
-#### Touches J2
-- **A** : Interagir
-- **Z** : Interagir
-- **E** : Interagir
-- **Q** : Interagir
-- **S** : Interagir
-- **D** : Interagir
+- **J2**  
+  - Touches : **A**, **Z**, **E**, **Q**, **S**, **D**  
 
-### Résumé
-Le jeu Ball Blast est contrôlé par deux joysticks et six touches supplémentaires. Les joysticks J1 et J2 ont des fonctions de base (haut, bas, gauche, droite) et des touches supplémentaires (O, L, K, M, A, Z, E, Q, S, D). Les touches J1 et J2 permettent d'interagir avec le jeu, probablement pour lancer des projectiles ou déclencher des actions spécifiques. Les joysticks J1 et J2 ont des fonctions supplémentaires qui peuvent être personnalisées pour des actions spécifiques dans le jeu.
+#### **Notes**
+- Les joysticks et touches sont associés aux actions de mouvement et de tir.  
+- Les touches de feu (buttons) sont utilisées pour lancer des projectiles ou activer des actions spéciales.  
+- Les contrôles sont définis dans le fichier `readme.md` et correspondent à la configuration des boutons de la borne arcade.
 
 ## Comment lancer et quitter le jeu ball-blast (scripts, classe main, commande) ?
 
-### Lancer et Quitter le Jeu Ball-Blast
+### Documentation : Lancement et Quitte du Jeu Ball Blast
 
-#### **1. Lancer le Jeu**
-Pour lancer le jeu `Ball-Blast`, vous devez suivre ces étapes :
+#### **1. Prérequis**
+- **Installation des dépendances** :  
+  ```bash
+  pip install pygame==2.6.1
+  ```
 
-1. **Chemin d'accès au répertoire du projet** : Assurez-vous d'être dans le répertoire racine du projet `ball-blast`.
+#### **2. Lancement du jeu**
+- **Script principal** :  
+  Exécutez le script `ball-blast.sh` pour lancer le jeu :  
+  ```bash
+  chmod +x ball-blast.sh
+  ./ball-blast.sh
+  ```  
+  Ce script se charge de :  
+  - Changer de répertoire vers le projet.  
+  - Lancer le fichier Python principal via `src/__main__.py`.
 
-2. **Exécuter le script** : Utilisez le script `ball-blast.sh` pour exécuter le programme.
+- **Alternative (manuel)** :  
+  Si le script n’est pas utilisé, lancez directement :  
+  ```bash
+  python3.7 src/__main__.py
+  ```  
+  Vérifiez que le répertoire `src` est dans le `PYTHONPATH`.
 
-```sh
-cd ./projet/ball-blast
-python3.7 ./src/__main__.py
-```
+#### **3. Quitte du jeu**
+- **Fermeture normale** :  
+  Fermez la fenêtre du jeu via la croix (X) de la fenêtre. Cela déclenche :  
+  ```python
+  pygame.quit()
+  ```  
+  dans le `__main__.py`, terminant la boucle principale.
 
-#### **2. Quitter le Jeu**
-Pour quitter le jeu, vous pouvez :
+- **Quitter via menu** :  
+  - Accédez au menu principal (via `showMenu` dans `menu.py`).  
+  - Appuyez sur `ESC` ou `Q` (selon le code incomplet) pour quitter.
 
-1. **Utiliser les touches de la borne** : 
-   - Pour quitter le jeu, utilisez les touches de la borne d'arcade. Selon le fichier `readme.md`, vous pouvez utiliser les touches `r`, `t`, `y` pour quitter le jeu.
+#### **4. Gestion des états**
+- **Pause/Reprendre** :  
+  Le jeu gère l’état de pause via la variable `pause` dans `__main__.py`.  
+  - Appuyez sur `P` (ou autre touche configurée) pour activer/désactiver la pause.
 
-2. **Utiliser les touches du clavier** : 
-   - Si vous êtes en mode pause ou si vous voulez quitter le jeu, vous pouvez utiliser les touches du clavier. Le fichier `menu.py` indique que vous pouvez utiliser les touches de direction pour naviguer dans le menu. Pour quitter le jeu, vous pouvez appuyer sur la touche `ESC` ou `Q` dans le menu.
+- **Fin de partie** :  
+  Si le joueur perd (`self.perdu: bool = True` dans `game.py`), le jeu passe en état `gameOver`, bloquant la boucle principale.
 
-3. **Fermer la fenêtre** : Si vous êtes en mode pause ou si vous voulez quitter le jeu, vous pouvez fermer la fenêtre de jeu en cliquant sur le bouton "X" dans le coin supérieur droit de la fenêtre.
-
-#### **3. Documentation**
-
-- **Fichier `readme.md`** : Ce fichier contient les instructions de base pour utiliser le jeu. Il décrit les touches de la borne d'arcade et les touches du clavier pour naviguer et quitter le jeu.
-
-- **Fichier `src/__main__.py`** : Ce fichier est le point d'entrée du programme. Il initialise Pygame, charge les assets, et gère le cycle de vie du jeu. Pour quitter le jeu, vous pouvez appuyer sur les touches de la borne d'arcade ou les touches du clavier comme indiqué dans le fichier `menu.py`.
-
-- **Fichier `menu.py`** : Ce fichier gère le menu du jeu. Il permet de naviguer entre les options du menu et de quitter le jeu en appuyant sur les touches de la borne d'arcade ou les touches du clavier.
-
-- **Fichier `ball-blast.sh`** : Ce script permet de lancer le programme en utilisant Python 3.7. Assurez-vous d'avoir Python 3.7 installé sur votre système.
-
-En suivant ces étapes, vous pouvez lancer et quitter le jeu `Ball-Blast` de manière efficace.
+#### **5. Notes techniques**
+- **Fichier principal** :  
+  Le script `__main__.py` initialise Pygame, gère les états (`menu`, `game`, `pause`) et les événements clavier.  
+- **Commandes clavier** :  
+  Les touches de base (flèches, `Q`, `ESC`) sont gérées dans `menu.py` et `game.py` (code incomplet dans les fichiers fournis).
 
 ## Quelles sont les classes principales et leurs responsabilités dans ball-blast ?
 
-### Documentation des classes principales dans ball-blast
+### Documentation Technique : Ball Blast
 
-#### 1. **Class `Game` (src/game.py)**
-   - **Responsabilités**:
-     - Gestion du jeu principal.
-     - Création et gestion des boules et des joueurs.
-     - Gestion des niveaux et des scores.
-     - Gestion des collisions et des effets spéciaux.
-     - Gestion des effets sonores et visuels.
-   - **Variables clés**:
-     - `level`: Niveau actuel du jeu.
-     - `ball_level`: Liste des couleurs et des tailles des boules.
-     - `ballEquivalents`: Poids des boules.
-     - `ballsToSpawn`: Nombre de boules à créer par niveau.
-     - `perdu`: Indicateur de si le joueur a perdu.
-     - `shootCD`: Compteur de refroidissement pour le tir.
-     - `texture`: Texture de fond du jeu.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation du jeu.
-     - `showMenu`: Affichage du menu principal.
-     - `update`: Mise à jour des objets et des effets.
-     - `draw`: Dessin des objets sur l'écran.
+#### **Classes Principales et Responsabilités**
 
-#### 2. **Class `Menu` (src/menu.py)**
-   - **Responsabilités**:
-     - Affichage du menu principal.
-     - Gestion des options du menu.
-     - Gestion des événements clavier pour naviguer dans le menu.
-   - **Variables clés**:
-     - `selectedOption`: Option sélectionnée dans le menu.
-     - `texture`: Texture de fond du menu.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation du menu.
-     - `showMenu`: Affichage du menu et gestion des événements clavier.
-     - `update`: Mise à jour des options du menu.
-     - `draw`: Dessin du menu sur l'écran.
+1. **`Game`**  
+   - **Responsabilités** :  
+     - Gère l'état global du jeu (vies, score, niveau, cooldown de tir).  
+     - Spawne des balles en fonction du niveau.  
+     - Gère les collisions entre balles, tirs et joueurs.  
+     - Met à jour le score et détecte la fin de partie (`perdu`).  
+     - Charge et applique les textures d'arrière-plan.  
+   - **Dépendances** :  
+     - Utilise `Player`, `Ball`, et `Bullet` pour la logique de jeu.  
 
-#### 3. **Class `Ball` (src/ball.py)**
-   - **Responsabilités**:
-     - Gestion des boules dans le jeu.
-     - Gestion des collisions et des effets spéciaux.
-   - **Variables clés**:
-     - `position`: Position de la boule.
-     - `velocity`: Vitesse de la boule.
-     - `size`: Taille de la boule.
-     - `color`: Couleur de la boule.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation de la boule.
-     - `update`: Mise à jour de la position et de la vitesse de la boule.
-     - `draw`: Dessin de la boule sur l'écran.
+2. **`Menu`**  
+   - **Responsabilités** :  
+     - Affiche l'interface de menu (Nouvelle partie, Crédits).  
+     - Gère la sélection des options via les touches du clavier.  
+     - Transitions vers l'état de jeu ou les crédits.  
+   - **Dépendances** :  
+     - Utilise `pygame` pour le rendu et la gestion des événements.  
 
-#### 4. **Class `Player` (src/player.py)**
-   - **Responsabilités**:
-     - Gestion des joueurs dans le jeu.
-     - Gestion des mouvements et des tirs.
-   - **Variables clés**:
-     - `position`: Position du joueur.
-     - `velocity`: Vitesse du joueur.
-     - `direction`: Direction du joueur.
-     - `health`: Points de vie du joueur.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation du joueur.
-     - `update`: Mise à jour de la position et de la vitesse du joueur.
-     - `draw`: Dessin du joueur sur l'écran.
+3. **`Player`**  
+   - **Responsabilités** :  
+     - Gère le mouvement des joueurs (J1 et J2) via les touches définies dans le `README.md`.  
+     - Gère le tir de balles (cooldown, position des tirs).  
+     - Interagit avec `Bullet` pour créer des tirs.  
 
-#### 5. **Class `Bullet` (src/bullet.py)**
-   - **Responsabilités**:
-     - Gestion des balles de tir dans le jeu.
-     - Gestion des collisions et des effets spéciaux.
-   - **Variables clés**:
-     - `position`: Position de la balle de tir.
-     - `velocity`: Vitesse de la balle de tir.
-     - `size`: Taille de la balle de tir.
-     - `color`: Couleur de la balle de tir.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation de la balle de tir.
-     - `update`: Mise à jour de la position et de la vitesse de la balle de tir.
-     - `draw`: Dessin de la balle de tir sur l'écran.
+4. **`Ball`**  
+   - **Responsabilités** :  
+     - Représente les balles à détruire (avec des comportements variés selon le niveau).  
+     - Gère la logique de mouvement et de collision avec les tirs.  
 
-#### 6. **Class `Constantes` (src/constantes.py)**
-   - **Responsabilités**:
-     - Définition des constantes utilisées dans le jeu.
-   - **Variables clés**:
-     - `SCREEN_WIDTH`: Largeur de l'écran.
-     - `SCREEN_HEIGHT`: Hauteur de l'écran.
-     - `WHITE`, `BLACK`, `RED`, `GREEN`, `BLUE`: Couleurs.
-     - `FONT`: Police de caractères.
-     - `FIRERATE`: Fréquence de tir.
-     - `BALL_EQUIVALENT`: Poids des boules.
-     - `FONT_SCORE`: Police de caractères pour les scores.
-   - **Méthodes clés**:
-     - Aucune méthode spécifique.
+5. **`Bullet`**  
+   - **Responsabilités** :  
+     - Gère le mouvement des tirs lancés par les joueurs.  
+     - Détecte les collisions avec les balles et met à jour le score.  
 
-#### 7. **Class `Menu` (src/menu.py)**
-   - **Responsabilités**:
-     - Affichage du menu principal.
-     - Gestion des options du menu.
-     - Gestion des événements clavier pour naviguer dans le menu.
-   - **Variables clés**:
-     - `selectedOption`: Option sélectionnée dans le menu.
-     - `texture`: Texture de fond du menu.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation du menu.
-     - `showMenu`: Affichage du menu et gestion des événements clavier.
-     - `update`: Mise à jour des options du menu.
-     - `draw`: Dessin du menu sur l'écran.
+---
 
-#### 8. **Class `Game` (src/game.py)**
-   - **Responsabilités**:
-     - Gestion du jeu principal.
-     - Création et gestion des boules et des joueurs.
-     - Gestion des niveaux et des scores.
-     - Gestion des effets spéciaux.
-   - **Variables clés**:
-     - `level`: Niveau actuel du jeu.
-     - `ball_level`: Liste des couleurs et des tailles des boules.
-     - `ballEquivalents`: Poids des boules.
-     - `ballsToSpawn`: Nombre de boules à créer par niveau.
-     - `perdu`: Indicateur de si le joueur a perdu.
-     - `shootCD`: Compteur de refroidissement pour le tir.
-     - `texture`: Texture de fond du jeu.
-   - **Méthodes clés**:
-     - `__init__`: Initialisation du jeu.
-     - `showMenu`: Affichage du menu principal.
-     - `update`: Mise à jour des objets et des effets.
-     - `draw`: Dessin des objets sur l'écran.
+#### **Structure Générale**
+- **`__main__.py`** : Point d'entrée principal, initialise Pygame, gère les états (menu, jeu, fin de partie).  
+- **`requirements.txt`** : Dépendances (pygame==2.6.1).  
+- **`README.md`** : Description des contrôles et des touches.  
 
-### Conclusion
-Les classes principales dans `ball-blast` sont `Game`, `Menu`, `Ball`, `Player`, et `Bullet`. Chaque classe a des responsabilités spécifiques pour gérer les aspects clés du jeu, comme la gestion des niveaux, des joueurs, des boules, et des effets spéciaux. Les constantes définies dans `Constantes` fournissent les valeurs de base pour les couleurs, les tailles, et les fréquences utilisées dans le jeu.
+**Note** : Les classes `Ball` et `Bullet` sont implémentées dans des fichiers distincts (`ball.py`, `bullet.py`) mais sont intégrées dans le système de jeu via des imports.
 

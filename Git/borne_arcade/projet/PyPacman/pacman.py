@@ -11,7 +11,7 @@ HEIGHT = 950
 screen = pygame.display.set_mode([WIDTH, HEIGHT])   # Setting the features of the screen
 timer = pygame.time.Clock()
 fps = 60    # Maximum fps limit for the game
-font = pygame.font.Font(size=30)
+font = pygame.font.Font(None, 30)
 level = copy.deepcopy(boards)  # You can use that code when you add new levels to the game (boards[0] or boards[1] could be different levels)
 color = "blue"
 PI = math.pi

@@ -91,7 +91,7 @@ class OllamaWrapper:
     def __init__(
         self,
         base_url: str = "http://10.22.28.190:11434",
-        timeout_s: float = 240.0,
+        timeout_s: float = 3600,
     ) -> None:
         self._base_url: str = base_url.rstrip("/")  # Normalise : pas de "/" final
         self._timeout_s: float = timeout_s  # Timeout réseau pour les requêtes HTTP
@@ -520,5 +520,5 @@ if __name__ == "__main__":
         print("Version:", client.get_version())
         print("Models:", [m.name for m in client.list_models()])
 
-        r = client.generate_text(model="gemma2:latest", prompt="Quel est le sens de la vie de l'univers et tout le reste?")
+        r = client.generate_text(model="qwen3:8b", prompt="Quel est le sens de la vie de l'univers et tout le reste?")
         print("Generate:", r.response)

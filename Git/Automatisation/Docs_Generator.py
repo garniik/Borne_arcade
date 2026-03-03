@@ -369,8 +369,8 @@ def main():
         models = wrapper.list_models()
         print("Modèles disponibles:", [m.name for m in models])
         
-        model_embed = models[0].name if models else "gemma2:latest"
-        model_llm = models[1].name if len(models) > 1 else "gemma2:latest"
+        model_embed = models[0].name if models else "qwen3:8b"
+        model_llm = models[1].name if len(models) > 1 else "qwen3:8b"
 
         print(f"\n🔧 Configuration:")
         print(f"  - Modèle embeddings: {model_embed}")
