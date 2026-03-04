@@ -31,15 +31,14 @@ SCARED_COL = (50, 50, 200)
 UI_COLOR   = (180, 160, 255)
 
 # Vitesses
-PLAYER_SPEED = 1
-GHOST_SPEED  = 0.4         # réduit (était 0.5)
+PLAYER_SPEED = 0.2
+GHOST_SPEED  = 0.1         # réduit (était 0.5)
 GHOST_SCARED_SPEED = 0.2
 SCARED_DURATION = 300      # frames (~10s à 30fps)
 
 
 def generate_maze_dfs():
-    """Génère un labyrinthe parfait via DFS récursif (backtracker)."""
-    # On travaille sur une grille de cellules (chaque cellule = 2x2 dans le labyrinthe final)
+    """Génère un labyrinthe style Pac-Man via DFS + ouvertures supplémentaires."""
     cols = MAZE_WIDTH  // 2
     rows = MAZE_HEIGHT // 2
 
@@ -50,17 +49,15 @@ def generate_maze_dfs():
 
     def carve(r, c):
         visited[r][c] = True
-        # Convertit en coordonnées labyrinthe
         my = r * 2 + 1
         mx = c * 2 + 1
-        maze[my][mx] = 0  # cellule
+        maze[my][mx] = 0
 
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         random.shuffle(directions)
         for dr, dc in directions:
             nr, nc = r + dr, c + dc
             if 0 <= nr < rows and 0 <= nc < cols and not visited[nr][nc]:
-                # Ouvre le mur entre les deux cellules
                 wall_y = my + dr
                 wall_x = mx + dc
                 maze[wall_y][wall_x] = 0
@@ -68,7 +65,78 @@ def generate_maze_dfs():
 
     carve(0, 0)
 
-    # Bords extérieurs = murs
+    # ── Étape 1 : Casser des murs supplémentaires pour créer des boucles ──
+    # Plus le ratio est élevé, plus le labyrinthe est ouvert (0.0 = parfait, 1.0 = chaos)
+    LOOP_RATIO = 0.30  # 30 % des murs intérieurs éligibles sont supprimés
+
+    interior_walls = []
+    for y in range(2, MAZE_HEIGHT - 2):
+        for x in range(2, MAZE_WIDTH - 2):
+            if maze[y][x] == 1:
+                # Mur horizontal entre deux cellules libres (gauche/droite)
+                if maze[y][x - 1] == 0 and maze[y][x + 1] == 0:
+                    interior_walls.append((y, x))
+                # Mur vertical entre deux cellules libres (haut/bas)
+                elif maze[y - 1][x] == 0 and maze[y + 1][x] == 0:
+                    interior_walls.append((y, x))
+
+    random.shuffle(interior_walls)
+    nb_to_remove = int(len(interior_walls) * LOOP_RATIO)
+    for y, x in interior_walls[:nb_to_remove]:
+        maze[y][x] = 0
+
+    # ── Étape 2 : Ouvrir des grands couloirs horizontaux / verticaux ──
+    # Crée 2-3 lignes et colonnes quasi-dégagées pour les grandes courses
+    NB_CORRIDORS = 2
+
+    # Couloirs horizontaux (une ligne sur deux pour rester dans la grille)
+    h_candidates = [y for y in range(3, MAZE_HEIGHT - 3, 2)]
+    random.shuffle(h_candidates)
+    for y in h_candidates[:NB_CORRIDORS]:
+        for x in range(1, MAZE_WIDTH - 1):
+            # On ne touche pas aux blocs très isolés (évite de tout ouvrir)
+            if maze[y][x] == 1:
+                # Ouvre seulement si ça connecte des espaces existants
+                if maze[y][x - 1] == 0 or maze[y][x + 1] == 0:
+                    maze[y][x] = 0
+
+    # Couloirs verticaux
+    v_candidates = [x for x in range(3, MAZE_WIDTH - 3, 2)]
+    random.shuffle(v_candidates)
+    for x in v_candidates[:NB_CORRIDORS]:
+        for y in range(1, MAZE_HEIGHT - 1):
+            if maze[y][x] == 1:
+                if maze[y - 1][x] == 0 or maze[y + 1][x] == 0:
+                    maze[y][x] = 0
+
+    # ── Étape 3 : Supprimer les culs-de-sac isolés (dead-ends) ──
+    # Un cul-de-sac = cellule libre avec un seul voisin libre → on ouvre un mur adjacent
+    DEAD_END_OPEN_PROB = 0.60  # Probabilité d'ouvrir chaque cul-de-sac
+
+    def count_free_neighbors(y, x):
+        return sum(
+            1 for dy, dx in [(-1,0),(1,0),(0,-1),(0,1)]
+            if 0 <= y+dy < MAZE_HEIGHT and 0 <= x+dx < MAZE_WIDTH
+            and maze[y+dy][x+dx] == 0
+        )
+
+    for _ in range(2):  # 2 passes pour propager l'effet
+        for y in range(1, MAZE_HEIGHT - 1):
+            for x in range(1, MAZE_WIDTH - 1):
+                if maze[y][x] == 0 and count_free_neighbors(y, x) == 1:
+                    if random.random() < DEAD_END_OPEN_PROB:
+                        # Cherche un mur adjacent ouvrable
+                        walls = [
+                            (y+dy, x+dx)
+                            for dy, dx in [(-1,0),(1,0),(0,-1),(0,1)]
+                            if 0 < y+dy < MAZE_HEIGHT-1 and 0 < x+dx < MAZE_WIDTH-1
+                            and maze[y+dy][x+dx] == 1
+                        ]
+                        if walls:
+                            wy, wx = random.choice(walls)
+                            maze[wy][wx] = 0
+
+    # ── Bords extérieurs = murs (toujours) ──
     for x in range(MAZE_WIDTH):
         maze[0][x] = 1
         maze[MAZE_HEIGHT - 1][x] = 1
@@ -76,26 +144,24 @@ def generate_maze_dfs():
         maze[y][0] = 1
         maze[y][MAZE_WIDTH - 1] = 1
 
-    # Zone centrale vide (repaire des fantômes) — on crée une petite pièce
+    # ── Zone centrale vide (repaire des fantômes) ──
     cy, cx = MAZE_HEIGHT // 2, MAZE_WIDTH // 2
     for dy in range(-1, 2):
         for dx in range(-2, 3):
             maze[cy + dy][cx + dx] = 0
 
-    # Place les points (2) sur les cellules libres
-    # Exclut la zone de spawn joueur et fantômes
+    # ── Place les points (2) sur les cellules libres ──
     for y in range(1, MAZE_HEIGHT - 1):
         for x in range(1, MAZE_WIDTH - 1):
             if maze[y][x] == 0:
                 maze[y][x] = 2
 
-    # Super-pastilles aux 4 coins accessibles
+    # ── Super-pastilles aux 4 coins accessibles ──
     corners = [
         (1, 1), (1, MAZE_WIDTH - 2),
         (MAZE_HEIGHT - 2, 1), (MAZE_HEIGHT - 2, MAZE_WIDTH - 2)
     ]
     for cy2, cx2 in corners:
-        # Cherche la cellule libre la plus proche du coin
         for r in range(3):
             found = False
             for dy in range(-r, r + 1):
@@ -103,7 +169,7 @@ def generate_maze_dfs():
                     ny, nx = cy2 + dy, cx2 + dx
                     if 0 <= ny < MAZE_HEIGHT and 0 <= nx < MAZE_WIDTH:
                         if maze[ny][nx] == 2:
-                            maze[ny][nx] = 3  # super-pastille
+                            maze[ny][nx] = 3
                             found = True
                             break
                 if found:
@@ -170,40 +236,8 @@ class Player:
         cx = int(self.x * CELL_SIZE + CELL_SIZE // 2) + MAZE_OFFSET_X
         cy = int(self.y * CELL_SIZE + CELL_SIZE // 2) + MAZE_OFFSET_Y
         r  = CELL_SIZE // 2 - 1
-
-        # Animation de la bouche
-        self.mouth_angle += 5 * (1 if self.mouth_opening else -1)
-        if self.mouth_angle >= 45:
-            self.mouth_opening = False
-        elif self.mouth_angle <= 0:
-            self.mouth_opening = True
-
-        # Angle de rotation selon direction
-        dx, dy = self.direction
-        base_angle = 0
-        if   dx ==  1: base_angle = 0
-        elif dx == -1: base_angle = 180
-        elif dy == -1: base_angle = 90
-        elif dy ==  1: base_angle = 270
-
-        start_angle = base_angle + self.mouth_angle
-        end_angle   = base_angle - self.mouth_angle
-
-        rect = pygame.Rect(cx - r, cy - r, r * 2, r * 2)
-        pygame.draw.arc(screen, self.color, rect,
-                        math.radians(start_angle), math.radians(end_angle + 360
-                        if end_angle < start_angle else end_angle), r)
-        # Corps plein (cercle) + triangle bouche
         pygame.draw.circle(screen, self.color, (cx, cy), r)
-        # Trou de la bouche (noir)
-        if self.mouth_angle > 2:
-            import math as _m
-            a1 = _m.radians(start_angle)
-            a2 = _m.radians(end_angle)
-            pts = [(cx, cy),
-                   (cx + int(r * _m.cos(a1)), cy - int(r * _m.sin(a1))),
-                   (cx + int(r * _m.cos(a2)), cy - int(r * _m.sin(a2)))]
-            pygame.draw.polygon(screen, DARK_BG, pts)
+        
 
 
 class Ghost:
@@ -311,34 +345,10 @@ class Ghost:
         else:
             color = self.color
 
-        # Corps principal (demi-cercle + rectangle)
+        # Corps principal
         body_rect = pygame.Rect(cx - r, cy - r, r * 2, r * 2)
         pygame.draw.circle(screen, color, (cx, cy - 1), r)
-        pygame.draw.rect(screen, color, (cx - r, cy - 1, r * 2, r + 1))
-
-        # Bas dentelé
-        teeth = 3
-        w = (r * 2) // teeth
-        for i in range(teeth):
-            tx = cx - r + i * w
-            if i % 2 == 0:
-                pygame.draw.polygon(screen, DARK_BG, [
-                    (tx, cy + r), (tx + w // 2, cy + r - 4), (tx + w, cy + r)
-                ])
-
-        # Yeux
-        ex_off = r // 3
-        ey_off = r // 4
-        pygame.draw.circle(screen, WHITE, (cx - ex_off, cy - ey_off), r // 4)
-        pygame.draw.circle(screen, WHITE, (cx + ex_off, cy - ey_off), r // 4)
-        if not self.scared:
-            # Pupilles orientées
-            dx = 1 if self.direction[0] >= 0 else -1
-            dy = 1 if self.direction[1] >= 0 else -1
-            pygame.draw.circle(screen, DARK_BG,
-                               (cx - ex_off + dx, cy - ey_off + dy), r // 7)
-            pygame.draw.circle(screen, DARK_BG,
-                               (cx + ex_off + dx, cy - ey_off + dy), r // 7)
+        
 
 
 def draw_maze(screen, maze, frame):
