@@ -36,50 +36,93 @@ Contrainte matérielle
 - Pour borne 2 joueurs, joystick et 6 boutons par joueur + d'autres boutons inutilisés pour le moment.
 
 
-Installation du système d'exploitation
+# Installation du système d'exploitation
 ----
-Installez Raspbian sur votre raspberry
+Installez un os rasberry sur votre raspberry.
+aller sur le site officel de raspberry pi et téléchargez l'imager : https://www.raspberrypi.com/software/
+suivez les instructions pour flasher votre carte SD.
+ensuite lancer la carte sur la raspberry pi.
 
-Installation des outils
-----
-
-Installez le jdk de java. Dans un terminal :
-> sudo apt-get update
-
-> sudo apt-get install openjdk-8-jdk
-
-Installez git. Toujours dans le même terminal :
-> sudo apt-get install git
-
-Créez un répertoire git :
-> cd ~
-
-> mkdir git
-
-> cd git
-
-On va ensuite télécharger la bibliothèque MG2D et la partie logicielle ici présente. Si vous l'avez déjà téléchargée, vous déplacerez le répertoire dans le répertoire git précédemment créé. Le répertoire doit s'appeler ***borne_arcade***
-
-> git clone http://iut.univ-littoral.fr/gitlab/synave/MG2D.git
-
-> git clone http://iut.univ-littoral.fr/gitlab/synave/borne_arcade.git
-
-Suite à ces téléchargements, vous devez avoir l'arborescence suivante :
-- répertoire personnel
-- &nbsp; &nbsp; |
-- &nbsp; &nbsp; |-> git
-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |
-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |-> MG2D
-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |-> borne_arcade
-
-Lancez le logiciel au démarrage de la borne
+# Installation automatique
 ----
 
-> mv borne.desktop ~/.config/autostart/
+Un script d'installation automatique est fourni pour simplifier le processus. Il installe toutes les dépendances nécessaires (Java, Python, MG2D, bibliothèques SDL pour pygame, etc.), configure l'environnement virtuel Python, copie les fichiers de configuration clavier et active le lancement automatique au démarrage.
 
-Redémarrez et normalement, lors du démarrage, un terminal va s'ouvrir et quelques secondes après (10-15 secondes), l'interface de la borne va se lancer. Des informations concernant les opérations en cours sont affichées dans le terminal. Soyez patient.
+Dans un terminal :
+
+```
+sudo apt-get update
+```
+
+```
+sudo apt-get install git
+```
+
+```
+cd ~
+```
+
+```
+mkdir git
+```
+
+```
+cd git
+```
+
+```
+git clone https://github.com/garniik/Borne_arcade
+```
+
+```
+cd borne_arcade
+```
+
+```
+sudo ./install-all.sh
+```
+
+Le script install-all.sh gère automatiquement :
+- Les dépendances système (Java, Python, libs SDL, etc.)
+- La bibliothèque MG2D
+- L'environnement virtuel Python avec les requirements
+- La configuration du clavier personnalisé pour la borne
+- Le lancement automatique au démarrage via autostart
+
+Après l'installation, redémarrez la Raspberry Pi. Le logiciel de la borne se lancera automatiquement au démarrage.
 
 Sélectionnez le jeu avec haut/bas du joystick du joueur 1 et lancez le jeu avec le bouton A du joueur 1.
 Quittez le logiciel avec le bouton Z du joueur 1. Une demande de confirmation s'affichera. Validez oui ou non avec le bouton A du joueur 1.
 
 Si vous quittez le menu, vous reviendrez sur le terminal. Attendez 30 secondes pour une extinction totale de la machine.
+
+
+# génération des documents
+----
+la borne est fourni avec un script qui permet de générer des jeux 
+assurez vous de bien etre sur le reseau de l'iut avant de lancer le script
+
+rendez vous dans le dossier Automatisation :
+```
+cd Automatisation
+```
+```
+python3 generate_games.py
+```
+
+# injecter des commentaire et la javadoc
+----
+
+la borne est fourni avec un script qui permet d'injecter des commentaire et la javadoc
+
+rendez vous dans le dossier Automatisation :
+```
+cd Automatisation
+```
+```
+python3 inject_docstring.py
+```
+```
+python3 inject_javadoc.py
+```
+
