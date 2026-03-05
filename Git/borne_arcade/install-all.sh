@@ -18,7 +18,7 @@ set -euo pipefail
 #
 
 #ajouter cette commande pour attribuer les touche correctement (adapter le chemin):sudo cp ~/sae/Borne_arcade/Git/borne_arcade/borne /usr/share/X11/xkb/symbols/borne
-
+# sudo sudo cp ~/sae/Borne_arcade/Git/borne_arcade/borne $HOME/.config/autostart
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 REPO_DIR="$SCRIPT_DIR"
 
