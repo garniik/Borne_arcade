@@ -17,6 +17,8 @@ set -euo pipefail
 #   --mg2d-zip <path>    Archive MG2D_*.zip locale
 #
 
+#ajouter cette commande pour attribuer les touche correctement (adapter le chemin):sudo cp ~/sae/Borne_arcade/Git/borne_arcade/borne /usr/share/X11/xkb/symbols/borne
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 REPO_DIR="$SCRIPT_DIR"
 
