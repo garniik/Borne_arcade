@@ -24,7 +24,7 @@ REPO_DIR="$SCRIPT_DIR"
 VENV_DIR="$REPO_DIR/.venv"
 INSTALL_JAVA=1
 INSTALL_MG2D=1
-MG2D_URL="http://www-lisic.univ-littoral.fr/~synave/MG2D_2.85.zip"
+MG2D_URL="https://github.com/synave/MG2D.git"
 MG2D_ZIP=""
 
 while [[ $# -gt 0 ]]; do
