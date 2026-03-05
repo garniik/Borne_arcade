@@ -17,14 +17,7 @@ set -euo pipefail
 #   --mg2d-zip <path>    Archive MG2D_*.zip locale
 #
 
-#ajouter cette commande pour attribuer les touche correctement
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-cp $SCRIPT_DIR/borne   /usr/share/X11/xkb/symbols/borne
 
-# Ajouter le lancement automatique de la borne
-mkdir -p "$TARGET_HOME/.config/autostart"
-cp "$REPO_DIR/borne.desktop" "$TARGET_HOME/.config/autostart/"
-chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/autostart"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 REPO_DIR="$SCRIPT_DIR"
 
@@ -206,6 +199,13 @@ if ! run_as_user "source '$VENV_DIR/bin/activate' && python -c 'import pygame'" 
   echo "⚠️  pygame non importable, tentative pip install pygame" >&2
   run_as_user "source '$VENV_DIR/bin/activate' && python -m pip install pygame"
 fi
+
+#ajouter cette commande pour attribuer les touche correctement
+cp $SCRIPT_DIR/borne   /usr/share/X11/xkb/symbols/borne
+
+# Ajouter le lancement automatique de la borne
+mkdir -p $HOME/.config/autostart
+cp $REPO_DIR/borne.desktop $HOME/.config/autostart/
 
 echo "[5/5] Résumé"
 echo "✅ Installation terminée"
