@@ -74,6 +74,13 @@ cd git
 git clone https://github.com/garniik/Borne_arcade
 ```
 
+si il y a un soucis avec le certificat faite
+```
+sudo date [MoisJourHeureAnnee]
+```
+exemple
+```
+sudo 030517002026
 ```
 cd borne_arcade
 ```

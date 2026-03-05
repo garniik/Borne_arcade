@@ -18,7 +18,8 @@ set -euo pipefail
 #
 
 #ajouter cette commande pour attribuer les touche correctement
-cp "$REPO_DIR/borne" /usr/share/X11/xkb/symbols/borne
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cp $SCRIPT_DIR/borne   /usr/share/X11/xkb/symbols/borne
 
 # Ajouter le lancement automatique de la borne
 mkdir -p "$TARGET_HOME/.config/autostart"
