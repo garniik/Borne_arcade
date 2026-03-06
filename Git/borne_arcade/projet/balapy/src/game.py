@@ -62,32 +62,7 @@ class FloatingText:
         surface.blit(s, (int(self.x - s.get_width() // 2), int(self.y)))
 
 
-class Particle:
-    """Particule décorative"""
-    def __init__(self, x, y, color):
-        self.x = float(x)
-        self.y = float(y)
-        self.color = color
-        self.vx = random.uniform(-120, 120)
-        self.vy = random.uniform(-200, -50)
-        self.life = random.uniform(0.5, 1.2)
-        self.timer = 0
-        self.size = random.randint(3, 8)
 
-    def update(self, dt):
-        self.timer += dt
-        self.x += self.vx * dt
-        self.y += self.vy * dt
-        self.vy += 200 * dt  # gravité
-
-    def is_dead(self):
-        return self.timer >= self.life
-
-    def draw(self, surface):
-        alpha = int(255 * (1 - self.timer / self.life))
-        s = pygame.Surface((self.size * 2, self.size * 2), pygame.SRCALPHA)
-        pygame.draw.circle(s, (*self.color, alpha), (self.size, self.size), self.size)
-        surface.blit(s, (int(self.x - self.size), int(self.y - self.size)))
 
 
 class Game:
@@ -104,7 +79,6 @@ class Game:
         self.card_w, self.card_h = self.card_renderer.get_card_size(sw, sh)
 
         self.state = 'MENU'
-        self.particles = []
         self.float_texts = []
         self.anim_timer = 0
 
@@ -112,7 +86,6 @@ class Game:
         self._init_game()
 
 
-    def _gen_beep(self, freq, duration):
         try:
             import numpy as np
             rate = 44100
@@ -214,7 +187,6 @@ class Game:
             elif len(self.selected) < MAX_SELECTED:
                 self.selected.append(card)
 
-            self._spawn_particles(self._card_x(self.cursor), self._card_y(card in self.selected), C_GREEN if card not in self.selected else C_GRAY, 5)
 
         elif key == pygame.K_r:
             # JOUER la main sélectionnée
@@ -347,8 +319,7 @@ class Game:
         self._draw_hand()
         self.cursor = min(self.cursor, max(0, len(self.hand) - 1))
 
-        # Effets visuels
-        self._spawn_score_particles(score)
+
 
 
         # Entrer en phase de scoring
@@ -388,7 +359,6 @@ class Game:
         self.money += reward
 
 
-        self._spawn_particles(self.sw // 2, self.sh // 2, C_GOLD, 40)
         self._add_float(f"VICTOIRE! +${reward}", self.sw // 2, self.sh * 0.3, C_GOLD, self.fonts.big, duration=2.5)
 
         self.blind_index += 1
@@ -460,16 +430,7 @@ class Game:
     def _add_float(self, text, x, y, color, font, duration=1.8, speed=-80):
         self.float_texts.append(FloatingText(text, x, y, color, font, duration, speed))
 
-    def _spawn_particles(self, x, y, color, count=20):
-        for _ in range(count):
-            self.particles.append(Particle(x, y, color))
 
-    def _spawn_score_particles(self, score):
-        color = C_GOLD if score > 500 else C_GREEN if score > 100 else C_BLUE
-        count = min(30, max(8, score // 50))
-        cx = self.sw // 2
-        cy = int(self.sh * 0.5)
-        self._spawn_particles(cx, cy, color, count)
 
     # ========================
     # UPDATE
@@ -478,10 +439,6 @@ class Game:
     def update(self, dt):
         self.anim_timer += dt
 
-        # Mettre à jour particules
-        self.particles = [p for p in self.particles if not p.is_dead()]
-        for p in self.particles:
-            p.update(dt)
 
         # Textes flottants
         self.float_texts = [f for f in self.float_texts if not f.is_dead()]
@@ -518,8 +475,6 @@ class Game:
             self._draw_stats()
 
         # Particules et textes flottants
-        for p in self.particles:
-            p.draw(self.screen)
         for f in self.float_texts:
             f.draw(self.screen)
 

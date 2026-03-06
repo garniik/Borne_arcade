@@ -134,7 +134,7 @@ class CardRenderer:
             border_col = C_BLUE
             border_w = 2
         else:
-            border_col = (160, 150, 200, 200)
+            border_col = (160, 150, 200)
             border_w = 1
 
         pygame.draw.rect(card_surf, (*border_col, alpha), (0, 0, w, h), border_w, border_radius=10)
