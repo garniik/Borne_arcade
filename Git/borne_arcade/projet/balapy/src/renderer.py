@@ -242,11 +242,9 @@ class HUDRenderer:
         """Affiche les contrôles en bas de l'écran"""
         controls = [
             ("◄►", "Naviguer"),
-            ("▲", "Sélectionner"),
-            ("R", "Jouer"),
-            ("F", "Défausser"),
-            ("T", "Jokers"),
-            ("G", "Stats"),
+            ("F", "selectionner"),
+            ("G", "jouer"),
+            ("H", "defausser"),
         ]
         total_w = 0
         items = []
