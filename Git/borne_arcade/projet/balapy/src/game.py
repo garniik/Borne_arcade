@@ -18,14 +18,11 @@ from renderer import (CardRenderer, HUDRenderer, Fonts, draw_rounded_rect,
 BLINDS = [
     {'name': 'PETIT BLIND', 'target': 300,   'reward': 3,  'ante': 1},
     {'name': 'GRAND BLIND', 'target': 450,   'reward': 4,  'ante': 1},
-    {'name': 'BOSS BLIND',  'target': 600,   'reward': 5,  'ante': 1, 'boss': True},
     {'name': 'PETIT BLIND', 'target': 800,   'reward': 4,  'ante': 2},
     {'name': 'GRAND BLIND', 'target': 1200,  'reward': 5,  'ante': 2},
-    {'name': 'BOSS BLIND',  'target': 1600,  'reward': 6,  'ante': 2, 'boss': True},
     {'name': 'PETIT BLIND', 'target': 2000,  'reward': 5,  'ante': 3},
     {'name': 'GRAND BLIND', 'target': 3000,  'reward': 6,  'ante': 3},
-    {'name': 'BOSS BLIND',  'target': 4000,  'reward': 8,  'ante': 3, 'boss': True},
-    {'name': 'GRAND FINAL', 'target': 8000,  'reward': 15, 'ante': 4, 'boss': True},
+    {'name': 'GRAND FINAL', 'target': 8000,  'reward': 15, 'ante': 4},
 ]
 
 HANDS_PER_ROUND = 4
@@ -137,7 +134,6 @@ class Game:
         self.show_score_popup = False
         self.score_popup_timer = 0
 
-        self.boss_effect = None
         self.anim_timer = 0
 
     def current_blind(self):
@@ -243,12 +239,6 @@ class Game:
         self.round_score = 0
         self.hands_left = HANDS_PER_ROUND
         self.discards_left = DISCARDS_PER_ROUND
-        self.boss_effect = None
-
-        blind = self.current_blind()
-        if blind.get('boss'):
-            self._apply_boss_effect()
-
         self._draw_hand()
 
     def _apply_boss_effect(self):
@@ -270,12 +260,6 @@ class Game:
             return
 
         cards = list(self.selected)
-
-        # Effet boss: pas de couleur
-        if self.boss_effect == 'no_flush':
-            hand_type, scoring_cards, kickers = evaluate_hand(cards)
-            if hand_type in ('flush', 'straight_flush', 'royal_flush'):
-                hand_type = 'straight' if hand_type == 'straight_flush' else 'high_card'
 
         hand_type, scoring_cards, kickers = evaluate_hand(cards)
 
@@ -327,7 +311,7 @@ class Game:
 
     def _discard(self):
         """Défausse les cartes sélectionnées"""
-        if self.discards_left <= 0 or self.boss_effect == 'no_discard':
+        if self.discards_left <= 0:
             self._add_float("PAS DE DÉFAUSSE!", self.sw // 2, self.sh * 0.5, C_RED, self.fonts.medium)
             return
 
@@ -543,8 +527,7 @@ class Game:
         # Blind name + target
         self.hud.draw_panel(self.screen, panel_x, panel_y, panel_w, int(self.sh * 0.18))
         ante_s = self.fonts.tiny.render(f"ANTE {blind['ante']}", True, C_GRAY)
-        blind_s = self.fonts.normal.render(blind['name'], True,
-                                            C_RED if blind.get('boss') else C_GOLD)
+        blind_s = self.fonts.normal.render(blind['name'], True, C_GOLD)
         self.screen.blit(ante_s, (panel_x + 10, panel_y + 6))
         self.screen.blit(blind_s, (panel_x + 10, panel_y + 22))
 
@@ -554,7 +537,7 @@ class Game:
             self.screen, panel_x + 10, bar_y,
             panel_w - 20, 18,
             self.round_score, blind['target'],
-            C_RED if blind.get('boss') else C_GREEN,
+            C_GREEN,
             f"{self.round_score:,} / {blind['target']:,}"
         )
 
@@ -576,20 +559,9 @@ class Game:
         self.screen.blit(money_s, (panel_x + 10, money_y + 8))
 
         # Deck restant
-        deck_y = money_y + int(self.sh * 0.1)
+        deck_y = money_y
         deck_s = self.fonts.small.render(f"Deck: {self.deck.remaining()}", True, C_GRAY)
         self.screen.blit(deck_s, (panel_x + 10, deck_y))
-
-        # Boss effect
-        if self.boss_effect:
-            boss_names = {
-                'no_flush': '⚠ PAS DE COULEUR',
-                'blind_suits': '⚠ ENSEIGNES CACHÉES',
-                'hand_size_minus': '⚠ -1 CARTE',
-                'no_discard': '⚠ PAS DE DÉFAUSSE',
-            }
-            be_s = self.fonts.small.render(boss_names.get(self.boss_effect, ''), True, C_RED)
-            self.screen.blit(be_s, (panel_x + 5, deck_y + 22))
 
         # ---- PANNEAU DROIT: Jokers ----
         joker_x = self.sw - panel_w - int(self.sw * 0.01)
@@ -609,6 +581,28 @@ class Game:
         if not self.jokers:
             empty_s = self.fonts.tiny.render("(aucun joker)", True, C_GRAY)
             self.screen.blit(empty_s, (joker_x + 14, panel_y + 36))
+
+        # ---- PANNEAU MAINS ----
+        hands_x = joker_x
+        hands_y = panel_y + int(self.sh * 0.6)
+        self.hud.draw_panel(self.screen, hands_x, hands_y, panel_w, int(self.sh * 0.35), "MAINS")
+        hy = hands_y + 30
+        hand_multipliers = {
+            'High Card': (5, 1),
+            'Pair': (10, 2),
+            'Two Pair': (20, 2),
+            'Three Kind': (30, 3),
+            'Straight': (30, 4),
+            'Flush': (35, 4),
+            'Full House': (40, 4),
+            'Four Kind': (60, 7),
+            'Str. Flush': (100, 8),
+            'Royal Flush': (100, 8),
+        }
+        for name, (chips, mult) in hand_multipliers.items():
+            h_s = self.fonts.tiny.render(f"{name}: {chips}×{mult}", True, C_WHITE)
+            self.screen.blit(h_s, (hands_x + 8, hy))
+            hy += 18
 
         # ---- CENTRE: Score de la dernière main ----
         if self.last_hand_type:
