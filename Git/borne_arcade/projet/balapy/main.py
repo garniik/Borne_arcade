@@ -2,13 +2,9 @@
 BALATRO ARCADE - Jeu de poker style Balatro
 Contrôles:
   FLECHES GAUCHE/DROITE : naviguer entre les cartes
-  FLECHE HAUT           : sélectionner/désélectionner une carte
-  R                     : jouer la main sélectionnée
-  F                     : défausser les cartes sélectionnées
-  T                     : utiliser un joker (si disponible)
-  G                     : voir les scores / stats
-  Y                     : aller au shop (entre les rondes)
-  H                     : passer au niveau suivant
+  F                     : sélectionner/valider
+  G                     : jouer la main sélectionnée
+  H                     : défausser les cartes sélectionnées
 """
 import sys
 import os

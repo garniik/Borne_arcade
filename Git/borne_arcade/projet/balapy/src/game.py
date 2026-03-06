@@ -162,7 +162,7 @@ class Game:
             self.state = 'PLAYING'
 
     def _menu_input(self, key):
-        if key in (pygame.K_r, pygame.K_RETURN, pygame.K_SPACE):
+        if key in (pygame.K_f, pygame.K_RETURN, pygame.K_SPACE):
             self._init_game()
             self._start_round()
             self.state = 'PLAYING'
@@ -179,7 +179,7 @@ class Game:
             self.cursor = (self.cursor + 1) % len(self.hand)
 
 
-        elif key == pygame.K_UP:
+        elif key == pygame.K_f:
             # Sélectionner / désélectionner la carte sous le curseur
             card = self.hand[self.cursor]
             if card in self.selected:
@@ -187,20 +187,15 @@ class Game:
             elif len(self.selected) < MAX_SELECTED:
                 self.selected.append(card)
 
-
-        elif key == pygame.K_r:
+        elif key == pygame.K_g:
             # JOUER la main sélectionnée
             if self.selected and self.hands_left > 0:
                 self._play_hand()
 
-        elif key == pygame.K_f:
+        elif key == pygame.K_h:
             # DÉFAUSSER les cartes sélectionnées
             if self.selected and self.discards_left > 0:
                 self._discard()
-
-        elif key == pygame.K_g:
-            # Voir stats
-            self.state = 'STATS'
 
         elif key == pygame.K_t:
             # Afficher info jokers
@@ -208,7 +203,7 @@ class Game:
 
     def _scoring_input(self, key):
         # Passer l'animation de score
-        if key in (pygame.K_r, pygame.K_RETURN, pygame.K_f):
+        if key in (pygame.K_f, pygame.K_RETURN):
             self.scoring_phase = False
             self.state = 'PLAYING'
             self._check_round_end()
@@ -224,20 +219,15 @@ class Game:
             self.shop_cursor = (self.shop_cursor - 1) % n
         elif key == pygame.K_RIGHT:
             self.shop_cursor = (self.shop_cursor + 1) % n
-        elif key == pygame.K_r:
+        elif key == pygame.K_f:
             # Acheter l'item sélectionné
             self._buy_shop_item(self.shop_cursor)
         elif key == pygame.K_h:
             # Continuer / passer le shop
             self._next_round()
-        elif key == pygame.K_f:
-            # Reroll shop (coûte 1$)
-            if self.money >= 1:
-                self.money -= 1
-                self._generate_shop()
 
     def _gameover_input(self, key):
-        if key in (pygame.K_r, pygame.K_RETURN):
+        if key in (pygame.K_f, pygame.K_RETURN):
             self.state = 'MENU'
 
     # ========================
@@ -513,7 +503,7 @@ class Game:
 
         # Instructions
         blink = int(255 * (0.5 + 0.5 * math.sin(t * 3)))
-        start = self.fonts.medium.render("APPUIE SUR  [R]  POUR JOUER", True, (*C_GOLD[:3], blink))
+        start = self.fonts.medium.render("APPUIE SUR  [F]  POUR JOUER", True, (*C_GOLD[:3], blink))
         start.set_alpha(blink)
         self.screen.blit(start, (self.sw // 2 - start.get_width() // 2, int(self.sh * 0.62)))
 
@@ -521,12 +511,9 @@ class Game:
         ctrl_y = int(self.sh * 0.75)
         controls = [
             ("◄ ►", "Naviguer les cartes"),
-            ("▲", "Sélectionner"),
-            ("R", "Jouer la main"),
-            ("F", "Défausser"),
-            ("G", "Statistiques"),
-            ("Y", "Shop"),
-            ("H", "Continuer"),
+            ("F", "Sélectionner/Valider"),
+            ("G", "Jouer la main"),
+            ("H", "Défausser"),
         ]
         for i, (k, d) in enumerate(controls):
             col = 3
@@ -662,7 +649,7 @@ class Game:
         # Indicateur de sélection
         if self.selected:
             sel_s = self.fonts.small.render(
-                f"{len(self.selected)}/5 cartes sélectionnées - [R] Jouer  [F] Défausser",
+                f"{len(self.selected)}/5 cartes sélectionnées - [G] Jouer  [H] Défausser",
                 True, C_WHITE)
             self.screen.blit(sel_s, (self.sw // 2 - sel_s.get_width() // 2,
                                       int(self.sh * 0.88)))
@@ -721,7 +708,7 @@ class Game:
                 self.card_renderer.draw_card(self.screen, card, sx + i * (cw + 20), sy, cw, ch)
 
         # Message
-        msg = self.fonts.medium.render("[R] pour continuer", True, C_GRAY)
+        msg = self.fonts.medium.render("[F] pour continuer", True, C_GRAY)
         self.screen.blit(msg, (self.sw // 2 - msg.get_width() // 2, int(self.sh * 0.85)))
 
     def _draw_shop(self):
@@ -793,7 +780,7 @@ class Game:
 
         # Contrôles
         ctrl_y = int(self.sh * 0.75)
-        controls_text = "[◄►] Naviguer   [R] Acheter   [F] Reroll ($1)   [H] Continuer"
+        controls_text = "[◄►] Naviguer   [F] Acheter   [H] Continuer"
         c_s = self.fonts.small.render(controls_text, True, C_GRAY)
         self.screen.blit(c_s, (self.sw // 2 - c_s.get_width() // 2, ctrl_y))
 
