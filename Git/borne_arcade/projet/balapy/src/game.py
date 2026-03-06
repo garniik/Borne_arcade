@@ -563,27 +563,8 @@ class Game:
         deck_s = self.fonts.small.render(f"Deck: {self.deck.remaining()}", True, C_GRAY)
         self.screen.blit(deck_s, (panel_x + 10, deck_y))
 
-        # ---- PANNEAU DROIT: Jokers ----
-        joker_x = self.sw - panel_w - int(self.sw * 0.01)
-        self.hud.draw_panel(self.screen, joker_x, panel_y, panel_w,
-                            int(self.sh * 0.55), "JOKERS")
-        jy = panel_y + 30
-        for i, j in enumerate(self.jokers):
-            jc = j.get_color()
-            draw_rounded_rect(self.screen, (30, 25, 50), (joker_x + 8, jy, panel_w - 16, 44), 8,
-                               2, jc)
-            n_s = self.fonts.small.render(j.name, True, jc)
-            d_s = self.fonts.tiny.render(j.description[:28], True, C_GRAY)
-            self.screen.blit(n_s, (joker_x + 14, jy + 4))
-            self.screen.blit(d_s, (joker_x + 14, jy + 22))
-            jy += 50
-
-        if not self.jokers:
-            empty_s = self.fonts.tiny.render("(aucun joker)", True, C_GRAY)
-            self.screen.blit(empty_s, (joker_x + 14, panel_y + 36))
-
         # ---- PANNEAU MAINS ----
-        hands_x = joker_x
+        hands_x = panel_x
         hands_y = panel_y + int(self.sh * 0.6)
         self.hud.draw_panel(self.screen, hands_x, hands_y, panel_w, int(self.sh * 0.35), "MAINS")
         hy = hands_y + 30
@@ -603,6 +584,26 @@ class Game:
             h_s = self.fonts.tiny.render(f"{name}: {chips}×{mult}", True, C_WHITE)
             self.screen.blit(h_s, (hands_x + 8, hy))
             hy += 18
+
+        # ---- PANNEAU DROIT: Jokers ----
+        joker_x = self.sw - panel_w - int(self.sw * 0.01)
+        self.hud.draw_panel(self.screen, joker_x, panel_y, panel_w,
+                            int(self.sh * 0.55), "JOKERS")
+        jy = panel_y + 30
+        for i, j in enumerate(self.jokers):
+            jc = j.get_color()
+            draw_rounded_rect(self.screen, (30, 25, 50), (joker_x + 8, jy, panel_w - 16, 44), 8,
+                               2, jc)
+            n_s = self.fonts.small.render(j.name, True, jc)
+            d_s = self.fonts.tiny.render(j.description[:28], True, C_GRAY)
+            self.screen.blit(n_s, (joker_x + 14, jy + 4))
+            self.screen.blit(d_s, (joker_x + 14, jy + 22))
+            jy += 50
+
+        if not self.jokers:
+            empty_s = self.fonts.tiny.render("(aucun joker)", True, C_GRAY)
+            self.screen.blit(empty_s, (joker_x + 14, panel_y + 36))
+
 
         # ---- CENTRE: Score de la dernière main ----
         if self.last_hand_type:
@@ -632,6 +633,7 @@ class Game:
             self.screen.blit(eq_s, (sx, sy + 6))
             sx += eq_s.get_width() + 10
             self.screen.blit(sc_s, (sx, sy))
+        
 
         # ---- CARTES EN MAIN ----
         self._draw_hand_cards()

@@ -156,7 +156,7 @@ def evaluate_hand(cards):
         kickers = [c for c in cards if c not in scoring]
         return ('four_of_a_kind', scoring, kickers)
 
-    if counts[0] == 3 and counts[1] == 2:
+    if len(counts) >= 2 and counts[0] == 3 and counts[1] == 2:
         scoring = cards
         return ('full_house', scoring, [])
 
@@ -171,7 +171,7 @@ def evaluate_hand(cards):
         kickers = [c for c in cards if c not in scoring]
         return ('three_of_a_kind', scoring, kickers)
 
-    if counts[0] == 2 and n >= 4 and counts[1] == 2:
+    if len(counts) >= 2 and counts[0] == 2 and n >= 4 and counts[1] == 2:
         scoring = sorted_groups[0][1] + sorted_groups[1][1]
         kickers = [c for c in cards if c not in scoring]
         return ('two_pair', scoring, kickers)
