@@ -1,5 +1,5 @@
 """
-jokers.py - Système de jokers (modificateurs) style Balatro
+jokers.py - Système de jokers (modificateurs) style balatry
 """
 import random
 

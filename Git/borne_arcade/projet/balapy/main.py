@@ -1,5 +1,5 @@
 """
-BALATRO ARCADE - Jeu de poker style Balatro
+balatry ARCADE - Jeu de poker style balatry
 Contrôles:
   FLECHES GAUCHE/DROITE : naviguer entre les cartes
   F                     : sélectionner/valider
@@ -17,7 +17,7 @@ from game import Game
 
 def main():
     pygame.init()
-    pygame.display.set_caption("BALATRO ARCADE")
+    pygame.display.set_caption("balatry ARCADE")
 
     # Résolution pour borne d'arcade (plein écran)
     info = pygame.display.Info()

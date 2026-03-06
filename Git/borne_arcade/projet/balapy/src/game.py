@@ -1,5 +1,5 @@
 """
-game.py - Logique principale du jeu Balatro Arcade
+game.py - Logique principale du jeu BALATRY Arcade
 États: MENU, PLAYING, SCORING, SHOP, GAME_OVER, VICTORY
 """
 import pygame
@@ -471,7 +471,7 @@ class Game:
         glow_r = int(200 + 20 * math.sin(t * 2))
         draw_glow(self.screen, C_GOLD, (self.sw // 2, title_y), glow_r, 80)
 
-        title = self.fonts.title.render("BALATRO", True, C_GOLD)
+        title = self.fonts.title.render("BALATRY", True, C_GOLD)
         sub   = self.fonts.big.render("ARCADE", True, C_WHITE)
         self.screen.blit(title, (self.sw // 2 - title.get_width() // 2, title_y - title.get_height() // 2))
         self.screen.blit(sub, (self.sw // 2 - sub.get_width() // 2, title_y + title.get_height() // 2 + 10))
