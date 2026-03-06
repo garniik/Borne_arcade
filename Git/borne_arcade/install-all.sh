@@ -64,8 +64,5 @@ done
 mkdir -p ~/.config/autostart
 mv borne.desktop ~/.config/autostart/
 
-
-
-
 # Lancer borne
 ./lancerBorne.sh

@@ -82,8 +82,7 @@ exemple
 ```
 sudo 030517002026
 ```
-cd borne_arcade
-```
+aller ensuite dans le fichier borne_arcade et lancer le script
 
 ```
 sudo ./install-all.sh
@@ -132,4 +131,11 @@ python3 inject_docstring.py
 ```
 python3 inject_javadoc.py
 ```
+# ajouter un jeu 
+
+ajouter un jeu est tres simple crée votre jeux dans un dossier et une fois terminé deplacer ce fichier dans le dossier projet
+et crée un script d'execution a la racine de la borne qui lancera votre jeux 
+attention
+votre jeux dois comporté une image en 400x320 de votre jeux appeler photo_small elle servira de miniature sur le menu
+
 
