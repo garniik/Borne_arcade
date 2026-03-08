@@ -28,13 +28,11 @@ q s d
 
 Attention ! De base, l'encodeur clavier de la borne de l'IUT a té mal relié aux boutons. Ce ne sont donc pas les bonnes lettres qui son identifiées lorsque l'on appuie sur un bouton ou fait bouger un joystick. Voir fichier **borne**
 
-
 Contrainte matérielle
 ----
 - Raspberry pi model 3 de préférence
 - Ecran 4:3 de résolution 1280x1024
 - Pour borne 2 joueurs, joystick et 6 boutons par joueur + d'autres boutons inutilisés pour le moment.
-
 
 # Installation du système d'exploitation
 ----
